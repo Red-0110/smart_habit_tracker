@@ -1,0 +1,90 @@
+body {
+    font-family: sans-serif;
+    padding: 2rem;
+    background: #f4f4f4;
+    color: #333;
+}
+
+/* Habit form styling */
+.habit-form {
+    margin-bottom: 1.5rem;
+}
+
+.habit-form input[type="text"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+    width: 60%;
+    max-width: 300px;
+    margin-right: 0.5rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.habit-form button.btn {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.habit-form button.btn:hover {
+    background-color: #0056b3;
+}
+
+/* Flash message styles */
+ul.flashes {
+    list-style: none;
+    padding: 0;
+}
+
+ul.flashes li {
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    border-radius: 5px;
+}
+
+.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.nudge-banner {
+    background-color: #e0f7fa;
+    border: 1px solid #4dd0e1;
+    border-radius: 8px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.flash {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    color: white;
+}
+
+.flash-success {
+    background-color: #4CAF50;
+}
+
+.flash-danger {
+    background-color: #f44336;
+}
+
+.flash-warning {
+    background-color:#f44336;
+}
+
+.flash-warning {
+    background-color: #ff9800;
+}
