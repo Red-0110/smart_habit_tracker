@@ -36,8 +36,8 @@
 
     <!-- Weekly Summary -->
     <div style="border: 1px solid #ccc; padding: 12px; margin-bottom: 20px; border-radius: 8px;">
-        <h2>Weekly Summary</h2>
-        <p><strong>Habits completed this week:</strong> {{ completed_this_week|default(0) }}</p>
+        <h2>All-Time Summary</h2>
+        <p><strong>Habits completed since account was created:</strong> {{ completed_this_week|default(0) }}</p>
         <h2>Nudge Stats</h2>
         <p><strong>Nudges Shown:</strong> {{ shown_count|default(0) }}</p>
         <p><strong>Nudges Closed:</strong> {{ closed_count|default(0) }}</p>
@@ -97,7 +97,7 @@
     {% endif %}
 
     <!-- Pie Chart -->
-    <div class="chart-container" style="margin: 30px 0;">
+     <div class="chart-container" style="margin: 30px 0;">
         <h2>Habit Completion Breakdown</h2>
         <canvas id="completionPieChart" width="100" height="100"></canvas>
     </div>
