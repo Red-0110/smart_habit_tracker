@@ -1,5 +1,5 @@
 #### HABIT TRACKER
-#### VIDEO DEMO: <URL HERE>
+#### VIDEO DEMO: <URL (https://youtu.be/CgpX6NhyCrU)>
 #### DESCRIPTION:
 
 ## OVERVIEW
