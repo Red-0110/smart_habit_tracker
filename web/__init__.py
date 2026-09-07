@@ -14,7 +14,7 @@ login_manager = LoginManager()
 login_manager.login_view = "auth.login"
 csrf = CSRFProtect()  # NEW
 
-def create_app():
+def create_app(config=None):
     app = Flask(__name__)
 
     # ---- Config ----
@@ -26,10 +26,13 @@ def create_app():
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
+    if config:
+        app.config.update(config)
+
     # ---- Init extensions ----
     db.init_app(app)
     login_manager.init_app(app)
-    migrate.init_app(app, db, directory="smart_habit_tracker/migrations")
+    migrate.init_app(app, db, directory=os.path.join(basedir, "..", "migrations"))
 
     # ---- CSRF wiring (must be inside create_app) ----
     csrf.init_app(app)
@@ -54,4 +57,8 @@ def create_app():
         from .models import User
         return User.query.get(int(user_id))
 
+    from public_demo import init_public_demo
+    init_public_demo(app)
+
     return app
+

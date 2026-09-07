@@ -4,7 +4,13 @@
     <title>Login</title>
 </head>
 <body>
-    <h1>LOGIN</h1>
+    <h1>Habit Tracker · Login</h1>
+{% if config.DEMO_MODE %}
+<p><strong>Local demo · fictional data</strong><br>
+Sign in as <code>alex@example.com</code> or <code>jordan@example.com</code>.<br>
+Password: <code>Demo-Explore-2026!</code></p>
+{% endif %}
+
 
     {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
@@ -19,6 +25,7 @@
     {% endwith %}
 
     <form method="POST" action="{{ url_for('auth.login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <label>Email:</label><br>
         <input type="text" name="email" required><br>
 
