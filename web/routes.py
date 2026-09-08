@@ -39,6 +39,7 @@ def dashboard():
             flash("Please select a habit.", "danger")
             return redirect(url_for("main.dashboard"))
 
+        Habit.query.filter_by(id=int(habit_id), user_id=current_user.id).first_or_404()
         new_log = HabitLog(
             habit_id=int(habit_id),
             completed=completed,
@@ -80,20 +81,14 @@ def dashboard():
     all_completed = _user_filter(all_completed)
     all_completed = all_completed.filter(HabitLog.completed.is_(True)).order_by(ts_col.asc()).all()
 
-    longest_streak = 0
-    current_streak = 0
-    last_day = None
-    for log in all_completed:
-        ts = getattr(log, "timestamp", None) or getattr(log, "date", None)
-        if ts is None:
-            continue
-        log_day = ts.date()
-        if last_day and (log_day - last_day).days == 1:
-            current_streak += 1
-        else:
-            current_streak = 1
-        longest_streak = max(longest_streak, current_streak)
-        last_day = log_day
+    completed_days = sorted({log.timestamp.date() for log in all_completed})
+    longest_streak = run = 0
+    previous = None
+    for day in completed_days:
+        run = run + 1 if previous and (day - previous).days == 1 else 1
+        longest_streak = max(longest_streak, run)
+        previous = day
+    current_streak = run if previous and (today - previous).days <= 1 else 0
 
     # Totals & percentages
     total_q = _user_filter(HabitLog.query)
@@ -165,6 +160,7 @@ def log_habit():
     completed = request.form.get("completed") == "on"
 
     if habit_id:
+        Habit.query.filter_by(id=int(habit_id), user_id=current_user.id).first_or_404()
         new_log = HabitLog(
             habit_id=int(habit_id),
             completed=completed,
@@ -292,10 +288,36 @@ def rename_habit(habit_id):
     flash("Habit renamed.", "success")
     return redirect(url_for("main.dashboard"))
 
-@main.route("/settings", methods=["GET"])
+@main.route("/settings", methods=["GET", "POST"])
 @login_required
 def settings():
-    # Minimal placeholder to render your settings page
+    if request.method == "POST":
+        if not current_user.check_password(request.form.get("current_password", "")):
+            flash("Current password is incorrect.", "danger")
+            return redirect(url_for("main.settings"))
+        username = request.form.get("username", "").strip()
+        email = request.form.get("email", "").strip()
+        if not username or not email:
+            flash("Username and email are required.", "danger")
+            return redirect(url_for("main.settings"))
+        try:
+            goal = max(0, int(request.form.get("weekly_goal") or 0))
+        except ValueError:
+            flash("Weekly goal must be a number.", "danger")
+            return redirect(url_for("main.settings"))
+        current_user.username = username
+        current_user.email = email
+        current_user.weekly_goal = goal
+        current_user.nudge_preference = request.form.get("nudge_preference") == "on"
+        if request.form.get("new_password"):
+            current_user.set_password(request.form["new_password"])
+        try:
+            db.session.commit()
+            flash("Settings saved.", "success")
+        except IntegrityError:
+            db.session.rollback()
+            flash("Username or email is already in use.", "danger")
+        return redirect(url_for("main.settings"))
     return render_template("settings.html", user=current_user)
 
 @main.route("/delete_account", methods=["POST"])

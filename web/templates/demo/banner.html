@@ -1,0 +1,9 @@
+{% if config.PUBLIC_DEMO %}
+<aside style="padding:16px;margin:12px 0;background:#edf3ff;border:1px solid #c7d7f1;border-radius:8px" aria-label="Demo controls">
+<strong>Your demo · fictional data</strong> <span>Changes are saved for this browser for up to two hours.</span>
+<a href="{{ url_for('public_demo.landing') }}">Demo guide</a>
+<form method="post" action="{{ url_for('public_demo.reset') }}" style="display:inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">Reset my demo</button></form>
+<form method="post" action="{{ url_for('public_demo.end') }}" style="display:inline"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">End demo</button></form>
+<small>Reset restores the sample history and removes your demo edits.</small>
+</aside>
+{% endif %}

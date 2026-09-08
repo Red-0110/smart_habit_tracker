@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{{ title }} · Try the demo</title>
+<style>body{font:18px/1.6 system-ui,sans-serif;max-width:760px;margin:8vh auto;padding:24px;color:#17243b;background:#f6f8fc}main{background:white;padding:32px;border-radius:16px;border:1px solid #dce3ed}button,a{font:inherit}button{background:#234a90;color:white;border:0;border-radius:8px;padding:12px 22px;cursor:pointer}li{margin:12px 0}</style></head>
+<body><main><p>Interactive portfolio demo</p><h1>{{ title }}</h1>
+<p>Explore a working app with fictional history. Your browser gets its own sample records, so your changes stay separate from other visitors.</p>
+<h2>Try it in two minutes</h2><ol><li>Create a habit called “Interview preparation.”</li><li>Log a completion, then refresh to see it saved.</li><li>Explore the charts, streaks, and heatmap.</li></ol>
+<p>Changes survive refreshes in this browser until the demo expires after two hours. Use “Reset my demo” to start again. Please use fictional information only. No registration or email address is needed.</p>
+<form method="post" action="{{ url_for('public_demo.start') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button type="submit">{{ 'Continue my demo' if active else 'Try the demo' }}</button></form>
+<p><small>This demo uses a browser cookie to remember your session. Expired records are removed by the operator's cleanup process.</small></p>
+</main></body></html>
