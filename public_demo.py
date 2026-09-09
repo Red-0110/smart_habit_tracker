@@ -157,15 +157,18 @@ def init_public_demo(app):
 
     @app.before_request
     def require_visitor():
-        if request.endpoint == 'static' or (request.endpoint or '').startswith('public_demo.'):
+        # Missing browser assets must stay 404s, without changing the session.
+        if request.endpoint is None or request.endpoint == 'static' or request.endpoint.startswith('public_demo.'):
             return None
         # Public demos cannot register, log in to real accounts, or change account credentials.
         if (request.endpoint or '').startswith('auth.') or request.endpoint in ('main.settings','main.delete_account'):
             abort(404)
         row = visitor()
         if not row or row.expires_at <= now() or not current_user.is_authenticated or current_user.id != row.user_id:
-            logout_user()
-            session.clear()
+            # Preserve an anonymous form's CSRF token across redirects.
+            if session.get('demo_visitor') or current_user.is_authenticated:
+                logout_user()
+                session.clear()
             return redirect(url_for('public_demo.landing'))
 
     @app.after_request
