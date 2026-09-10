@@ -32,7 +32,13 @@ with TemporaryDirectory() as folder:
     assert a.get('/register').status_code==404
     assert a.post('/demo/start').status_code==400
     assert b'Demo-Explore' not in a.get('/demo').data
-    assert post(a,'/demo/start').status_code==302
+    # Browsers request missing icons after rendering a form. Neither those
+    # requests nor anonymous protected-page redirects may rotate its CSRF token.
+    form_token = token(a.get('/demo'))
+    for missing in ['/favicon.ico', '/apple-touch-icon.png', '/missing-page']:
+        assert a.get(missing).status_code == 404
+    assert a.get('/dashboard', follow_redirects=True).status_code == 200
+    assert a.post('/demo/start', data={'csrf_token': form_token}).status_code == 302
     with a.session_transaction() as state: akey=state['demo_visitor']
     assert post(a,'/demo/start').status_code==302
     with app.app_context(): assert DemoVisitor.query.count()==1
